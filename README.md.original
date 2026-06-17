@@ -1,0 +1,130 @@
+# GharFix Backend API
+
+Node.js + Express + MongoDB backend for the GharFix home services platform.
+
+---
+
+## 🚀 Quick Setup (5 minutes)
+
+### 1. Install dependencies
+```bash
+cd gharfix-backend
+npm install
+```
+
+### 2. Set up MongoDB Atlas (free)
+1. Go to https://cloud.mongodb.com and create a free account
+2. Create a **free M0 cluster**
+3. Under "Database Access" → add a user with password
+4. Under "Network Access" → allow `0.0.0.0/0` (all IPs)
+5. Click "Connect" → "Drivers" → copy the connection string
+
+### 3. Configure environment
+```bash
+cp .env.example .env
+```
+Then open `.env` and fill in:
+- `MONGO_URI` — paste your MongoDB Atlas connection string
+- `JWT_SECRET` — any long random string
+- `CLIENT_URL` — your Netlify frontend URL
+
+### 4. Run the server
+```bash
+# Development (auto-restarts)
+npm run dev
+
+# Production
+npm start
+```
+
+Server runs on http://localhost:5000
+
+---
+
+## 📡 API Endpoints
+
+### Auth
+| Method | Endpoint | Access | Description |
+|--------|----------|--------|-------------|
+| POST | `/api/auth/register` | Public | Register customer or provider |
+| POST | `/api/auth/login` | Public | Login, returns JWT token |
+| GET | `/api/auth/me` | 🔒 Auth | Get current user data |
+| POST | `/api/auth/change-password` | 🔒 Auth | Change password |
+
+### Providers
+| Method | Endpoint | Access | Description |
+|--------|----------|--------|-------------|
+| GET | `/api/providers` | Public | List providers (filter: city, category, minRating) |
+| GET | `/api/providers/:id` | Public | Single provider profile |
+| PUT | `/api/providers/:id` | 🔒 Provider | Update own profile |
+
+### Bookings
+| Method | Endpoint | Access | Description |
+|--------|----------|--------|-------------|
+| POST | `/api/bookings` | 🔒 Auth | Create booking |
+| GET | `/api/bookings/my` | 🔒 Auth | My bookings (customer or provider) |
+| PATCH | `/api/bookings/:id/status` | 🔒 Auth | Update booking status |
+
+### Reviews
+| Method | Endpoint | Access | Description |
+|--------|----------|--------|-------------|
+| POST | `/api/reviews` | 🔒 Auth | Submit review after completed booking |
+| GET | `/api/reviews/provider/:id` | Public | Get provider's reviews |
+
+---
+
+## 🔐 Authentication
+
+Add this header to protected requests:
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+---
+
+## 🌐 Deploy to Render (free)
+
+1. Push this folder to a GitHub repo
+2. Go to https://render.com → New → Web Service
+3. Connect your GitHub repo
+4. Set:
+   - **Build Command:** `npm install`
+   - **Start Command:** `npm start`
+5. Add all `.env` variables in Render's "Environment" tab
+6. Copy the Render URL (e.g. `https://gharfix-api.onrender.com`)
+7. Update your frontend `fetch()` calls to use this URL
+
+---
+
+## 📁 Project Structure
+
+```
+gharfix-backend/
+├── server.js              # Entry point
+├── .env.example           # Environment template
+├── config/
+│   └── jwt.js             # Token generation
+├── middleware/
+│   └── auth.middleware.js # JWT protect + role guard
+├── models/
+│   ├── User.model.js
+│   ├── Provider.model.js
+│   ├── Booking.model.js
+│   └── Review.model.js
+├── controllers/
+│   ├── auth.controller.js
+│   ├── provider.controller.js
+│   ├── booking.controller.js
+│   └── review.controller.js
+└── routes/
+    ├── auth.routes.js
+    ├── provider.routes.js
+    ├── booking.routes.js
+    ├── review.routes.js
+    ├── user.routes.js
+    └── service.routes.js
+```
+
+---
+
+*GharFix — University of Central Punjab FYP · Group G1F22UFYPCS060*
