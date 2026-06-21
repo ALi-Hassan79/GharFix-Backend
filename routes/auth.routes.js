@@ -1,6 +1,6 @@
 const express  = require('express');
 const { body } = require('express-validator');
-const { register, login, getMe, changePassword } = require('../controllers/auth.controller');
+const { register, login, getMe, changePassword, verifyOTP, resendOTP } = require('../controllers/auth.controller');
 const { protect } = require('../middleware/auth.middleware');
 
 const router = express.Router();
@@ -46,6 +46,12 @@ const loginValidation = [
 // POST /api/auth/register
 router.post('/register', registerValidation, register);
 
+// POST /api/auth/verify-otp
+router.post('/verify-otp', verifyOTP);
+
+// POST /api/auth/resend-otp
+router.post('/resend-otp', resendOTP);
+
 // POST /api/auth/login
 router.post('/login', loginValidation, login);
 
@@ -54,5 +60,4 @@ router.get('/me', protect, getMe);
 
 // POST /api/auth/change-password — must be logged in
 router.post('/change-password', protect, changePassword);
-
 module.exports = router;
