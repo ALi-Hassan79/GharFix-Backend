@@ -8,12 +8,16 @@ const supabase = require('./config/supabase');
 const app = express();
 
 // ─── Middleware ───────────────────────────────────────────
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'https://gharfix.netlify.app',
+  'https://harmonious-meerkat-2f29f3.netlify.app',
+  'http://localhost:3000',
+  'http://127.0.0.1:5500'
+].filter(Boolean); // drops undefined if CLIENT_URL isn't set
+
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL || 'https://gharfix.netlify.app',
-    'http://localhost:3000',
-    'http://127.0.0.1:5500'
-  ],
+  origin: allowedOrigins,
   credentials: true
 }));
 
